@@ -3,7 +3,7 @@ import { CssBaseline } from '@mui/material';
 import { Route, Switch } from 'react-router-dom';
 
 import useStyles from './styles';
-import { Actors, Navbar, Movies, MovieInformation, Profile } from '.';
+import { Actors, Navbar, Home, Movies, MovieInformation, Profile } from '.';
 
 const App = () => {
   const classes = useStyles();
@@ -20,8 +20,11 @@ const App = () => {
           <Route exact path="/actors/:id">
             <Actors />
           </Route>
-          <Route path="/">
+          <Route exact path="/movies">
             <Movies />
+          </Route>
+          <Route path="/">
+            <Home />
           </Route>
           <Route exact path="/profile/:id">
             <Profile />

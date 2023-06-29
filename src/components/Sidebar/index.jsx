@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
-import { Divider, List, ListItem, ListItemText, ListSubheader, ListItemIcon, Box, CircularProgress } from '@mui/material';
+import { Divider, List, ListItem, ListItemText, ListItemIcon, Box, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/styles';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
+import { useGetGenresQuery } from '../../services/TMDB';
 import useStyles from './styles';
 
 const settings = ['Account', 'Sign out of Neflix'];
@@ -13,7 +16,10 @@ const demoGenres = [
   { label: 'Animation', value: 'animation' },
 ];
 const Sidebar = ({ setMobileOpen }) => {
+  const { genreIdOrCategoryName  } = useSelector((state) => state.currentGenreOrCategory);
   const theme = useTheme();
+  const { data, error, isFetching } = useGetGenresQuery();
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   return (
@@ -42,17 +48,22 @@ const Sidebar = ({ setMobileOpen }) => {
 
       <Divider sx={{ borderColor: '#333' }} />
       <List>
-        <Link key={'home'} to="/" className={classes.activeLinks}>
+        <Link key="home" to="/" className={classes.activeLinks}>
           <ListItem>
             <ListItemText>
               Home
             </ListItemText>
           </ListItem>
         </Link>
-        {demoGenres.map(({ label, value }) => (
-          <Link key={value} to="/" activeClassName={classes.activeLinks} className={classes.links}>
-            <ListItem onClick={() => {}} button>
-              <ListItemText primary={label} />
+
+        {isFetching ? (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        ) : data.genres.map(({ name, id }) => (
+          <Link key={name} to="/movies" activeClassName={classes.activeLinks} className={classes.links}>
+            <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>
+              <ListItemText primary={name} />
             </ListItem>
           </Link>
         ))}

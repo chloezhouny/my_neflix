@@ -30,7 +30,7 @@ import Logo from './Logo';
 import { Sidebar } from '..';
 import useStyles from './styles';
 
-const pages = [
+const categories = [
   { label: 'Home', value: 'home' },
   { label: 'Movies', value: 'movies' },
   { label: 'New & Popular', value: 'new' },
@@ -131,7 +131,7 @@ const Navbar = () => {
                   className={classes.mobileMenuContainer}
                   color="inherit"
                 >
-                  {pages.map(({ label, value }) => (
+                  {categories.map(({ label, value }) => (
                     <Link
                       key={value}
                       to="/"
@@ -161,7 +161,7 @@ const Navbar = () => {
 
               {isDesktop && (
               <div className={classes.nav}>
-                {pages.map(({ label, value }) => (
+                {categories.map(({ label, value }) => (
                   <Button
                     key={value}
                     onClick={handleCloseNavMenu}
