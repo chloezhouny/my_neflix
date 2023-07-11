@@ -4,23 +4,23 @@ import useStyles from './styles';
 
 import { Movie } from '..';
 
-const MovieList = ({ movies }) => {
+const MovieList = ({ movies, numberOfMovies, width, startFrom }) => {
   const classes = useStyles();
   return (
     <Grid
       container
-      spacing={0.5}
-      sx={{ width: '70%',
+      columnSpacing={0.8}
+      rowSpacing={{ xs: 4, sm: 5, md: 6 }}
+      sx={{ width,
         margin: 'auto' }}
       className={classes.moviesContainer}
     >
-      {movies.results.map((movie, i) => (
-        <Grid item xs={6} sm={4} md={4} lg={3} xl={2} className={classes.movie}>
-          <Movie key={i} movie={movie} i={i} height="200px" />
+      {movies.results.slice(startFrom, numberOfMovies).map((movie, i) => (
+        <Grid item xs={4} sm={3} md={3} lg={2.4} xl={2}>
+          <Movie key={i} movie={movie} i={i} height="auto" width="100%" />
         </Grid>
       ))}
     </Grid>
-
   );
 };
 

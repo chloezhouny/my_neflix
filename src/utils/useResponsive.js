@@ -8,13 +8,16 @@ export const useResponsive = () => {
   const updateWindowDimensions = useCallback(() => {
     setWindowWidth(window.innerWidth);
     setWindowHeight(window.innerHeight);
-
-    if (window.innerWidth >= 900) {
-      setScreenType('DESKTOP');
-    } else if (window.innerWidth < 900 && windowWidth >= 600) {
-      setScreenType('TABLET');
+    if (window.innerWidth >= 1536) {
+      setScreenType('Xl');
+    } else if (window.innerWidth < 1536 && window.innerWidth >= 1200) {
+      setScreenType('Lg');
+    } else if (window.innerWidth < 1200 && window.innerWidth >= 900) {
+      setScreenType('Md');
+    } else if (window.innerWidth < 900 && window.innerWidth >= 600) {
+      setScreenType('Sm');
     } else {
-      setScreenType('MOBILE');
+      setScreenType('Xs');
     }
   }, [windowWidth]);
 

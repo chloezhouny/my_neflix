@@ -8,19 +8,26 @@ import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import { useGetGenresQuery } from '../../services/TMDB';
 import useStyles from './styles';
 
-const settings = ['Account', 'Sign out of Neflix'];
 const demoGenres = [
   { label: 'Comedies', value: 'comedy' },
   { label: 'Action', value: 'action' },
   { label: 'Thriller', value: 'thriller' },
   { label: 'Animation', value: 'animation' },
 ];
+const settings = ['Manage Profiles', 'Account', 'Dashboard'];
+
 const Sidebar = ({ setMobileOpen }) => {
-  const { genreIdOrCategoryName  } = useSelector((state) => state.currentGenreOrCategory);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
   const theme = useTheme();
   const { data, error, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const signOut = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };
 
   return (
     <div className={classes.wrapper}>
@@ -44,15 +51,29 @@ const Sidebar = ({ setMobileOpen }) => {
             </ListItem>
           </Link>
         ))}
+
+        <ListItem onClick={signOut} button>
+          <ListItemText primary="Sign out of Neflix" />
+        </ListItem>
       </List>
 
       <Divider sx={{ borderColor: '#333' }} />
       <List>
-        <Link key="home" to="/" className={classes.activeLinks}>
-          <ListItem>
+        <Link key="home" className={classes.activeLinks}>
+          <ListItem
+            onClick={() => window.location.href = '/'}
+          >
             <ListItemText>
               Home
             </ListItemText>
+          </ListItem>
+        </Link>
+        <Link key="my list" to={`/profile/${user.id}`} className={classes.links}>
+          <ListItem
+            onClick={() => {}}
+            button
+          >
+            <ListItemText primary="My List" />
           </ListItem>
         </Link>
 
@@ -62,7 +83,7 @@ const Sidebar = ({ setMobileOpen }) => {
           </Box>
         ) : data.genres.map(({ name, id }) => (
           <Link key={name} to="/movies" activeClassName={classes.activeLinks} className={classes.links}>
-            <ListItem onClick={() => dispatch(selectGenreOrCategory(id))} button>
+            <ListItem onClick={() => dispatch(selectGenreOrCategory({ name, id }))} button>
               <ListItemText primary={name} />
             </ListItem>
           </Link>

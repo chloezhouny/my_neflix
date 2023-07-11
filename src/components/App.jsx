@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { CssBaseline } from '@mui/material';
 import { Route, Switch } from 'react-router-dom';
 
 import useStyles from './styles';
-import { Actors, Navbar, Home, Movies, MovieInformation, Profile } from '.';
+import useAlan from './Alan';
+
+import { Actor, Navbar, Home, Movies, MovieInformation, Profile } from '.';
 
 const App = () => {
   const classes = useStyles();
+  const alanBtnContainer = useRef();
+
+  useAlan();
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -14,23 +20,19 @@ const App = () => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
-          <Route path="/movie/:id">
-            <MovieInformation />
-          </Route>
-          <Route exact path="/actors/:id">
-            <Actors />
-          </Route>
           <Route exact path="/movies">
             <Movies />
           </Route>
-          <Route path="/">
+          <Route exact path={['/', '/approved']}>
             <Home />
           </Route>
           <Route exact path="/profile/:id">
             <Profile />
           </Route>
+
         </Switch>
       </main>
+      <div ref={alanBtnContainer} />
     </div>
   );
 };

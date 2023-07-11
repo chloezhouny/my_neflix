@@ -2,10 +2,14 @@ import { makeStyles } from '@mui/styles';
 import { alpha } from '@mui/material/styles';
 
 export default makeStyles((theme) => ({
+
   wrapper: {
     height: '70px',
     [theme.breakpoints.down('sm')]: {
       height: '50px',
+    },
+    '& .MuiContainer-root': {
+      padding: '0 4vw',
     },
   },
   // appbar leftside
@@ -30,6 +34,9 @@ export default makeStyles((theme) => ({
   },
   mobileMenuContainer: {
     display: 'flex',
+    '& .MuiMenu-paper': {
+      backgroundColor: theme.palette.mode === 'light' ? '#FFF3EF !important' : 'black !important',
+    },
   },
   mobileMenuLinks: {
     color: theme.palette.mode === 'light' ? '#485863' : '#fff',
@@ -49,6 +56,7 @@ export default makeStyles((theme) => ({
   },
   navItem: {
     display: 'block',
+    fontSize: '2vw',
   },
   // appbar rightside
   rightContainer: {
@@ -62,56 +70,14 @@ export default makeStyles((theme) => ({
       alignItems: 'center',
     },
   },
-  search: {
-    display: 'inline-block',
-    position: 'relative',
-    borderRadius: '2px',
-    backgroundColor: alpha('#141414', 0.15),
-    '&:hover': {
-      backgroundColor: alpha('#141414', 0.25),
-    },
-    marginLeft: 0,
-    width: 'auto',
-    height: '70%',
-    [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing(1),
-    },
-    // [theme.breakpoints.up('sm')]: {
-    //   height: 'none',
-    // },
-  },
-  searchIconWrapper: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  searchInput: {
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      // fontSize: '16px',
-      padding: theme.spacing(1, 1, 1, 1),
-      // vertical padding + font size from searchIcon
-      transition: theme.transitions.create('width'),
-      width: '6ch',
-      height: '100%',
-      [theme.breakpoints.up('sm')]: {
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        width: '8ch',
-        '&:focus': {
-          width: '15ch',
-        },
-      },
-    },
-  },
   profileButton: {
     display: 'inline-block',
   },
   profileMenu: {
     marginTop: '45px',
+    '& .MuiMenu-paper': {
+      backgroundColor: theme.palette.mode === 'light' ? '#FFF3EF !important' : 'black !important',
+    },
   },
-
+ 
 }));

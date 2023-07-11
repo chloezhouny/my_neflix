@@ -4,14 +4,11 @@ export default makeStyles((theme) => ({
   moviesContainer: {
     display: 'flex',
     flexWrap: 'wrap',
-    justifyContent: 'center',
     overflow: 'auto',
     [theme.breakpoints.down('sm')]: {
-      justifyContent: 'center',
-      width: '100% !important',
+      alignItems: 'center',
+      // width: '90% !important',
+      margin: 'auto',
     },
-  },
-  movie: {
-    padding: '10px',
   },
 }));

@@ -1,39 +1,30 @@
 import React from 'react';
-import { Box, CircularProgress } from '@mui/material';
 
-import { MovieSlider } from '..';
-import { useGetGenresQuery } from '../../services/TMDB';
+import { Movie, MovieSlider } from '..';
+import { useGetMoviesQuery } from '../../services/TMDB';
 import useStyles from './styles';
 
 const categories = [
   { label: 'New & Popular', value: 'popular' },
+  {label: 'Now Playing', value: 'now_playing'},
   { label: 'Top Rated', value: 'top_rated' },
   { label: 'Upcoming', value: 'upcoming' },
 ];
 
 const Home = () => {
   const classes = useStyles();
-  const { data: genresData, error, isFetching } = useGetGenresQuery();
+  const { data } = useGetMoviesQuery({ page: 1 });
   return (
-    <div className={classes.wrapper}>
-      <div>
-        {categories.map(({ label, value }) => (
-          <MovieSlider key={value} label={label} value={value} />
-        ))}
+    <>
+      <Movie isFeatured height="490px" movie={data?.results[0]} />
+      <div className={classes.wrapper}>
+        <div>
+          {categories.map(({ label, value }) => (
+            <MovieSlider key={value} label={label} value={value} />
+          ))}
+        </div>
       </div>
-      {/*{isFetching ? (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress />
-        </Box>
-      )
-        : (
-          <div className={classes.wrapper}>
-            {genresData.genres.map(({ name, id }) => (
-              <MovieSlider key={id} label={name} value={id} />
-            ))}
-          </div>
-        )}*/}
-    </div>
+    </>
   );
 };
 

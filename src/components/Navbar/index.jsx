@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   AppBar,
   IconButton,
@@ -9,48 +9,55 @@ import {
   MenuItem,
   Container,
   Button,
-  InputBase,
-  Tooltip,
+  Grid,
   Avatar,
   Drawer,
   useMediaQuery,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Search as SearchIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   Brightness4,
   Brightness7,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Logo from './Logo';
+import { Sidebar, Search } from '..';
 
-import { Sidebar } from '..';
+import { ColorModeContext } from '../../utils/ToggleColorMode';
+import { setUser } from '../../features/auth';
+import { fetchToken, createSessionId, moviesApi } from '../../utils';
+import { useGetMoviesQuery, useGetGenresQuery } from '../../services/TMDB';
+import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import useStyles from './styles';
 
 const categories = [
-  { label: 'Home', value: 'home' },
-  { label: 'Movies', value: 'movies' },
+  { label: 'Movies', value: 'movies', link: '/movies' },
   { label: 'New & Popular', value: 'new' },
   { label: 'Top Rated', value: 'top_rated' },
   { label: 'Upcoming', value: 'upcoming' },
 ];
-const settings = ['Manage Profiles', 'Account', 'Dashboard', 'Sign out of Neflix'];
+const settings = ['Manage Profiles', 'Account', 'Dashboard'];
 
 const Navbar = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+
   const theme = useTheme();
+  const themeMode = useTheme();
+  const dispatch = useDispatch();
   const classes = useStyles();
+
+  const colorMode = useContext(ColorModeContext);
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
   const isMobile = useMediaQuery('(max-width:599px)');
   const isTablet = useMediaQuery('(min-width:600px) and (max-width:899px)');
   const isDesktop = useMediaQuery('(min-width:900px)');
-  const themeMode = useTheme();
-  const isAuthenticated = true;
-
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -62,10 +69,28 @@ const Navbar = () => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const signout = () => {
+    localStorage.clear();
+    window.location.href = '/';
+  };
+
+  const token = localStorage.getItem('request_token');
+  useEffect(() => {
+    const logInUser = async () => {
+      if (!token) return;
+      let sessionId = localStorage.getItem('session_id');
+      if (!sessionId) {
+        sessionId = await createSessionId();
+      }
+      const { data: userData } = await moviesApi.get(`/account?session_id=${sessionId}`);
+      dispatch(setUser(userData));
+    };
+    logInUser();
+  }, [token]);
 
   return (
     <>
@@ -86,17 +111,17 @@ const Navbar = () => {
                 onClick={() => setMobileOpen((prev) => !prev)}
                 className={classes.menuButton}
               >
-                <MenuIcon />
+                <MenuIcon sx={{ color: theme.palette.mode === 'light' ? '#485863' : 'white' }} />
               </IconButton>
               )}
               <IconButton
-                component={Link}
-                to="/"
                 color="inherit"
                 className={classes.imageLink}
                 width="auto"
+                sx={{ marginRight: '2vw' }}
+                onClick={() => window.location.href = '/'}
               >
-                <Logo width="80px" color={theme.palette.mode === 'light' ? '#485863' : '#e50914'} />
+                <Logo width={(isMobile || isTablet) ? '70px' : '100px'} color={theme.palette.mode === 'light' ? '#485863' : '#e50914'} />
               </IconButton>
               {isTablet && (
               <>
@@ -107,10 +132,10 @@ const Navbar = () => {
                   key="browse"
                   onClick={() => {}}
                   onMouseEnter={handleOpenNavMenu}
-                  // onMouseOut={handleCloseNavMenu}
+                  // onMouseLeave={handleCloseNavMenu}
                   endIcon={<KeyboardArrowDownIcon />}
                   className={classes.navItem}
-                  sx={{ my: 2, color: theme.palette.mode === 'light' ? '#485863' : '#fff', textTransform: 'none' }}
+                  sx={{ my: 2, color: theme.palette.mode === 'light' ? '#485863' : '#fff', textTransform: 'none', fontSize: '1vw' }}
                 >
                   Browse
                 </Button>
@@ -130,12 +155,36 @@ const Navbar = () => {
                   onClose={handleCloseNavMenu}
                   className={classes.mobileMenuContainer}
                   color="inherit"
+
                 >
-                  {categories.map(({ label, value }) => (
+                  <Link
+                    key="home"
+                    color="inherit"
+                    className={classes.mobileMenuLinks}
+                    onClick={() => window.location.href = '/'}
+                  >
+                    <MenuItem
+                      color="inherit"
+                      onClick={handleCloseNavMenu}
+                    >
+                      <Typography
+                        align="center"
+                        sx={{ width: '100%',
+                          color: theme.palette.mode === 'light' ? '#485863' : '#fff',
+                          fontWeight: theme.palette.mode === 'light' ? '500' : '200',
+                          '&:hover': {
+                            fontWeight: theme.palette.mode === 'light' ? '200' : '500',
+                          } }}
+                      >Home
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+
+                  {categories.map(({ label, value, link }) => (
                     <Link
                       key={value}
-                      to="/"
                       color="inherit"
+                      to={link}
                       className={classes.mobileMenuLinks}
                     >
                       <MenuItem
@@ -144,7 +193,8 @@ const Navbar = () => {
                       >
                         <Typography
                           align="center"
-                          sx={{ width: '100%', color: theme.palette.mode === 'light' ? '#485863' : '#fff',
+                          sx={{ width: '100%',
+                            color: theme.palette.mode === 'light' ? '#485863' : '#fff',
                             fontWeight: theme.palette.mode === 'light' ? '500' : '200',
                             '&:hover': {
                               fontWeight: theme.palette.mode === 'light' ? '200' : '500',
@@ -161,14 +211,42 @@ const Navbar = () => {
 
               {isDesktop && (
               <div className={classes.nav}>
-                {categories.map(({ label, value }) => (
+                <Button
+                  key="home"
+                  onClick={() => { handleCloseNavMenu(); window.location.href = '/'; }}
+                  className={classes.navItem}
+                  sx={{
+                    my: 2,
+                    color: theme.palette.mode === 'light' ? '#485863' : '#fff',
+                    display: 'inline',
+                    textTransform: 'none',
+                    fontSize: '1.2vw',
+                    fontWeight: theme.palette.mode === 'light' ? '700' : '400',
+                    '&:hover': {
+                      fontWeight: theme.palette.mode === 'light' ? '400' : '700',
+                    },
+                  }}
+                >
+                  Home
+                </Button>
+                {categories.map(({ label, value, link }) => (
                   <Button
                     key={value}
+                    component={Link}
+                    to={link}
                     onClick={handleCloseNavMenu}
                     className={classes.navItem}
-                    component={Link}
-                    to="/"
-                    sx={{ my: 2, color: theme.palette.mode === 'light' ? '#485863' : '#fff', display: 'inline', textTransform: 'none' }}
+                    sx={{
+                      my: 2,
+                      color: theme.palette.mode === 'light' ? '#485863' : '#fff',
+                      display: 'inline',
+                      textTransform: 'none',
+                      fontSize: '1.2vw',
+                      fontWeight: theme.palette.mode === 'light' ? '700' : '400',
+                      '&:hover': {
+                        fontWeight: theme.palette.mode === 'light' ? '400' : '700',
+                      },
+                    }}
                   >
                     {label}
                   </Button>
@@ -178,33 +256,28 @@ const Navbar = () => {
             </Box>
 
             <Box className={classes.rightContainer}>
-              <div className={classes.search}>
-                {!isMobile && (
-                <div className={classes.searchIconWrapper}>
-                  <SearchIcon />
-                </div>
-                )}
-
-                <InputBase placeholder="Search" className={classes.searchInput} />
-              </div>
+              <Search />
               <IconButton
                 color="inherit"
                 sx={{ ml: 1 }}
-                onClick={() => {}}
+                onClick={colorMode.toggleColorMode}
               >
-                {themeMode.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                {themeMode.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 sx={{ color: '#485863' }} />}
               </IconButton>
               {!isAuthenticated && (
-                <Button color={theme.palette.mode === 'light' ? '#485863' : '#e50914'} onClick={() => {}}>
+                <Button
+                  sx={{ color: theme.palette.mode === 'light' ? '#485863' : '#e50914', textTransform: 'none' }}
+                  onClick={fetchToken}
+                >
                   Sign In
                 </Button>
               )}
               {isAuthenticated && !isMobile && (
                 <>
-                  <Tooltip title="Open settings" className={classes.profileButton}>
+                  <div className={classes.profileButton}>
                     <IconButton
                       component={Link}
-                      to="/profile/:id"
+                      to={`/profile/${user.id}`}
                       onMouseEnter={handleOpenUserMenu}
                       onClick={() => {}}
                       sx={{ p: 0 }}
@@ -217,7 +290,7 @@ const Navbar = () => {
                         src="https://occ-0-1885-2218.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABdYJV5wt63AcxNaDoqDXUhqZb55oN5Dxt1m-Zdn_z5rn_hIq9m8dA8JB2xdcPmrY3yXnlVWYKPXnOrbv2QN4aEVU28dESJg.png?r=1d4"
                       />
                     </IconButton>
-                  </Tooltip>
+                  </div>
                   <Menu
                     className={classes.profileMenu}
                     id="menu-appbar"
@@ -235,11 +308,22 @@ const Navbar = () => {
                     onClose={handleCloseUserMenu}
                     color="inherit"
                   >
+                    <MenuItem
+                      component={Link}
+                      to={`/profile/${user.id}`}
+                      key="list"
+                      onClick={handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">My List</Typography>
+                    </MenuItem>
                     {settings.map((setting) => (
                       <MenuItem key={setting} onClick={handleCloseUserMenu}>
                         <Typography textAlign="center">{setting}</Typography>
                       </MenuItem>
                     ))}
+                    <MenuItem key="sign out" onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center" onClick={signout}>Sign out of Neflix</Typography>
+                    </MenuItem>
                   </Menu>
                 </>
               )}
@@ -247,6 +331,7 @@ const Navbar = () => {
           </Toolbar>
         </Container>
       </AppBar>
+
       <div>
         <nav className={classes.drawer}>
           {isMobile && (

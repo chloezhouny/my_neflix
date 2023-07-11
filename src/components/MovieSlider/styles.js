@@ -18,6 +18,6 @@ export default makeStyles((theme) => ({
     fontSize: '1.4vw',
     lineHeight: '1.2vw',
     verticalAlign: 'bottom',
-    color: theme.palette.mode === 'light' ? '#485863' : '#fff',
+    color: theme.palette.mode === 'light' ? '#485863' : '#e5e5e5',
   },
 }));
