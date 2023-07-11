@@ -150,14 +150,14 @@ const MovieInformation = ({ id, setMovieOpen, setActorOpen, setActorId, expanded
         </Grid>
       </Grid>
 
-      <Grid item container xs={12} spacing={3} sx={expanded ? { margin: '0 4vw 2vh 4vw' } : { margin: '0 1.5vw 1vh 1.5vw' } }>
+      <Grid item container xs={12} spacing={3} sx={(expanded || isMobile) ? { margin: '0 4vw 2vh 4vw' } : { margin: '-2vh 2vw 1vh 2vw' } }>
         <Grid item container className={classes.leftContainer} xs={!expanded && !isMobile ? 12 : 8} sx={{ padding: '0px', marginLeft: '-24px' }}>
           <Grid item display="flex" flexDirection={isMobile ? 'column' : 'row'} align="space-around">
-            <div display="flex" flexDirection='row' justifyContent='start' gap={1}>
+            <div className={classes.ratingWrapper}>
               <Rating readOnly value={data.vote_average / 2} />
-              <span className={classes.rating}>{data?.vote_average}/10 </span>
+              <Typography fontSize="16px" marginLeft='0.5em'>{data?.vote_average}/10 </Typography>
             </div>
-            <Typography fontSize="16px" sx={{ marginLeft: '0.5em', color: '#bcbcbc' }}>
+            <Typography fontSize="16px" sx={{ color: '#bcbcbc' }}>
               {data?.runtime}min {data.release_date.split('-')[0]}
             </Typography>
           </Grid>
@@ -175,7 +175,7 @@ const MovieInformation = ({ id, setMovieOpen, setActorOpen, setActorId, expanded
         {(expanded || isMobile) && (
         <Grid container item className={classes.rightContainer} xs={4}>
           <Grid item xs={12}>
-            <span>Cast: </span>
+            <span className={classes.rightTitle}>Cast: </span>
             <span>{data?.credits?.cast?.map((cast) => (
               <div key={cast.name} className={classes.links} onClick={() => { setActorOpen(true); setActorId(cast.id); setMovieOpen(false) }}>
                 <Typography variant="body">{cast?.name}{', '} </Typography>
@@ -185,7 +185,7 @@ const MovieInformation = ({ id, setMovieOpen, setActorOpen, setActorId, expanded
             <span>more</span>
           </Grid>
           <Grid item xs={12}>
-            <span>Genres: </span>
+            <span className={classes.rightTitle}>Genres: </span>
             <span>{data?.genres?.map((genre, i) => (
               <Link key={genre.name} className={classes.links} to="/movies" onClick={() => { selectGenreOrCategory({ id: genre.id, name: genre.name }); setMovieOpen(false); setActorOpen(false); }}>
                 <Typography variant="body">{genre?.name}{i === data?.genres?.length - 1 ? '' : ', '} </Typography>
@@ -195,7 +195,7 @@ const MovieInformation = ({ id, setMovieOpen, setActorOpen, setActorId, expanded
           </Grid>
         </Grid>
         )}
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={expanded || isMobile} timeout="auto" unmountOnExit>
           <Grid item sx={{ marginTop: '2em', marginBottom: '20px' }} xs={12}>
             <Typography fontSize="24px" gutterBottom>
               More Like This
@@ -233,8 +233,9 @@ const MovieInformation = ({ id, setMovieOpen, setActorOpen, setActorId, expanded
             setMovieOpen(false);
             setExpanded(false);
           }}
+
         >
-          <CloseOutlinedIcon />
+          <CloseOutlinedIcon sx={{color: 'white'}}/>
         </IconButton>
       </div>
     </Grid>

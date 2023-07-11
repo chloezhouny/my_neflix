@@ -73,16 +73,30 @@ export default makeStyles((theme) => ({
       textDecoration: 'none',
     },
   },
+  movieCardWrapper: {
+    position: 'relative',
+   
+    
+  },
   image: {
     borderRadius: '0.2vw',
     // height: '200px',
     marginBottom: '10px',
     maxWidth: '280px',
     cursor: 'pointer',
+     '&:hover': {
+      transform: 'scale(1.1)',
+      transition: 'transform 500ms',
+    },
   },
   movieTitle: {
-    textOverlow: 'ellipsis',
-    fontSize: '1.2vw',
+    position: 'absolute',
+    bottom: '0',
+    padding: '0 1em',
+    textOverflow: 'ellipsis',
+    fontSize: '1vw',
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    color: 'black'
   },
   title: {
   	color: '#485863',

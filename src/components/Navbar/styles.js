@@ -1,9 +1,9 @@
 import { makeStyles } from '@mui/styles';
-import { alpha } from '@mui/material/styles';
 
 export default makeStyles((theme) => ({
 
   wrapper: {
+    width: '100%',
     height: '70px',
     [theme.breakpoints.down('sm')]: {
       height: '50px',

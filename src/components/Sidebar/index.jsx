@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Divider, List, ListItem, ListItemText, ListItemIcon, Box, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/styles';
@@ -8,12 +8,12 @@ import { selectGenreOrCategory } from '../../features/currentGenreOrCategory';
 import { useGetGenresQuery } from '../../services/TMDB';
 import useStyles from './styles';
 
-const demoGenres = [
-  { label: 'Comedies', value: 'comedy' },
-  { label: 'Action', value: 'action' },
-  { label: 'Thriller', value: 'thriller' },
-  { label: 'Animation', value: 'animation' },
-];
+// const demoGenres = [
+//   { label: 'Comedies', value: 'comedy' },
+//   { label: 'Action', value: 'action' },
+//   { label: 'Thriller', value: 'thriller' },
+//   { label: 'Animation', value: 'animation' },
+// ];
 const settings = ['Manage Profiles', 'Account', 'Dashboard'];
 
 const Sidebar = ({ setMobileOpen }) => {
@@ -31,6 +31,7 @@ const Sidebar = ({ setMobileOpen }) => {
 
   return (
     <div className={classes.wrapper}>
+      {isAuthenticated && (
       <List>
         <ListItem className={classes.profile} sx={{ height: 'auto' }}>
           <ListItemIcon className={classes.profileIcon}>
@@ -41,21 +42,22 @@ const Sidebar = ({ setMobileOpen }) => {
             />
           </ListItemIcon>
           <ListItemText>
-            chloezhou
+            {user?.username}
           </ListItemText>
         </ListItem>
         {settings.map((setting) => (
-          <Link key={setting} to="/" className={classes.links}>
-            <ListItem onClick={() => {}} button>
+          <div key={setting} className={classes.links}>
+            <ListItem button disabled>
               <ListItemText primary={setting} />
             </ListItem>
-          </Link>
+          </div>
         ))}
-
         <ListItem onClick={signOut} button>
           <ListItemText primary="Sign out of Neflix" />
         </ListItem>
+
       </List>
+      )}
 
       <Divider sx={{ borderColor: '#333' }} />
       <List>

@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
-import { Box, CircularProgress, Modal, Fade, Card, CardMedia, CardActions, Button, Typography, CardContent, useMediaQuery } from '@mui/material';
+import { Box, CircularProgress, Modal, Grow, Fade, Card, CardMedia, CardActions, Button, Typography, CardContent, useMediaQuery } from '@mui/material';
 import {
   PlayArrow as PlayArrowIcon,
   InfoOutlined as InfoOutlinedIcon,
 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-
 import { MovieInformation, Actor } from '..';
 import { useGetMovieQuery } from '../../services/TMDB';
 import useStyles from './styles';
 
-const Movie = ({ movie, height, isFeatured }) => {
+const Movie = ({ movie, i, height, isFeatured }) => {
   const [movieOpen, setMovieOpen] = useState(false);
   const [actorOpen, setActorOpen] = useState(false);
-  // const [featuredData, setFeaturedData] = useState([]);
+  const [showTitle, setShowTitle] = useState(false);
   const [playFeatured, setPlayFeatured] = useState(false);
   const [movieId, setMovieId] = useState(movie?.id);
   const [actorId, setActorId] = useState('');
@@ -41,7 +40,7 @@ const Movie = ({ movie, height, isFeatured }) => {
             <CardMedia
               media="picture"
               alt={movie?.title}
-              image={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}
+              image={movie?.backdrop_path ? `https://image.tmdb.org/t/p/original/${movie?.backdrop_path} ` : 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80'}
               // height={height}
               className={classes.featuredCardMedia}
               onClick={() => setPlayFeatured(true)}
@@ -107,26 +106,31 @@ const Movie = ({ movie, height, isFeatured }) => {
       )}
 
       {!isFeatured && (
-      <div onClick={
+        <Grow in key={i} timeout={(i + 1) * 250}>
+          <div
+            className={classes.movieCardWrapper}
+            onClick={
         () => {
           setPlayFeatured(false);
           setMovieOpen(true);
         }
       }
-      >
-        <img
-          src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : 'https://www.fillmurray.com/200/300'}
-          alt={movie.title}
-          className={classes.image}
-          // onMouseEnter={handlePopoverOpen}
-          // onMouseLeave={handlePopoverClose}
-          // onClick={handlePopoverOpen}
-          height={height}
-          width="100%"
-          maxWidth="132px"
-        />
-        <div className={classes.movieTitle}>{movie.title}</div>
-      </div>
+          >
+            <img
+              src={movie.backdrop_path ? `https://image.tmdb.org/t/p/w500/${movie.backdrop_path}` : 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1756&q=80'}
+              alt={movie.title}
+              className={classes.image}
+              onMouseEnter={() => setShowTitle(true)}
+              onMouseLeave={() => setShowTitle(false)}
+              height={height}
+              width="100%"
+              maxWidth="132px"
+            />
+            {showTitle && (
+            <div className={classes.movieTitle}>{movie.title}</div>
+            )}
+          </div>
+        </Grow>
       )}
 
       <Modal
@@ -138,7 +142,7 @@ const Movie = ({ movie, height, isFeatured }) => {
         <Fade in={movieOpen}>
           <div
             // className={classes.container}
-          className={expanded || isMobile ? classes.fullScreenContainer : classes.container}
+            className={expanded || isMobile ? classes.fullScreenContainer : classes.container}
           >
             <MovieInformation
               id={movie?.id || movieId}

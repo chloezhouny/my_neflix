@@ -31,10 +31,6 @@ export default makeStyles((theme) => ({
       flexDirection: 'column',
       felxWrap: 'wrap',
     },
-    '& .MuiRating-root': {
-      fontSize: '1.4vw',
-    },
-
   },
   buttonGroupWrapper: {
     width: '40%',
@@ -84,9 +80,15 @@ export default makeStyles((theme) => ({
       width: '100%',
     },
   },
+  ratingWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'start',
+    alignItems: 'bottom',
+    marginRight: '1em',
+  },
   rating: {
-    fontSize: '16px',
-    marginLeft: '0.5em',
+    marginRight: '0.5em',
   },
   expandMoreIcon: {
     marginLeft: 'auto',
@@ -103,7 +105,7 @@ export default makeStyles((theme) => ({
     },
   },
   rightContainer: {
-    opacity: 0.8,
+    opacity: 0.9,
     fontSize: '14px',
     lineHeight: '20px',
   },

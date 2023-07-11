@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Box, 
 AppBar,
@@ -27,6 +27,7 @@ import useStyles from './styles';
 
 const Movies = () => {
   const [page] = useState(1);
+  const [isScrolledToContent, setScrolledToContent ] = useState(true);
   const { genreIdOrCategoryName, searchQuery } = useSelector((state) => state.currentGenreOrCategory);
   const { data: movies,  error: moviesError, isFetching: isMoviesFetching } = useGetMoviesQuery({ genreIdOrCategoryName, page, searchQuery });
   const { data: genresData, error:genresError, isFetching: isGenresFetching } = useGetGenresQuery();
@@ -44,6 +45,18 @@ const Movies = () => {
     setAnchorElGenre(null);
    await dispatch(selectGenreOrCategory({ name, id }))
   };
+
+  const changeHeaderColor = () => {
+    if (window.scrollY >= 120) {
+      setScrolledToContent(true)
+    } else {
+      setScrolledToContent(false)
+    }
+  }
+  useEffect(() => {
+    changeHeaderColor()
+    window.addEventListener("scroll", changeHeaderColor)
+  })
 
   if (isMoviesFetching || isGenresFetching) {
     return (
@@ -73,7 +86,7 @@ const Movies = () => {
         position="fixed"
         sx={{top: '70px'}}
       >
-        <Container maxWidth="xl">     
+        <Container maxWidth="xl" sx={isScrolledToContent && {backgroundColor: theme.palette.mode === 'light' ? '#FFF3EF' : 'black'}}>     
       {!!genreIdOrCategoryName && !isMobile && (
         <Toolbar className={classes.genreHeaderWrapper} disableGutters>
           <Box display='flex' alignItems='center' marginTop='0.5vw'>
@@ -88,7 +101,7 @@ const Movies = () => {
       {!genreIdOrCategoryName && !isMobile && (
           <Toolbar disableGutters className={classes.headerWrapper}>
             <Box className={classes.header} marginTop='0.5vw'>
-              <Typography sx={{color: theme.palette.mode === 'light' ? '#485863' : '#fff'}} marginLeft='1vw' fontSize="3vw" fontWeight="600"> Movies</Typography>
+              <Typography sx={{color: theme.palette.mode === 'light' && isScrolledToContent ? '#485863' : '#fff'}} marginLeft='1vw' fontSize="3vw" fontWeight="600">Movies</Typography>
             <div className={classes.genreBtnContainer}>
               <Button
                   aria-label="Genres"
@@ -99,10 +112,10 @@ const Movies = () => {
                   endIcon={<KeyboardArrowDownIcon />}
                   className={classes.navItem}
                   sx={{
-                    color: theme.palette.mode === 'light' ? '#485863' : '#fff', 
+                    color: theme.palette.mode === 'light' && isScrolledToContent ? '#485863' : '#fff', 
                     textTransform: 'none', 
-                    fontSize: '1.2vw',  
-                    border: `1px solid ${theme.palette.mode === 'light' ? '#485863' : '#fff'}`,
+                    fontSize: '1vw',  
+                    border: `1px solid ${theme.palette.mode === 'light' && isScrolledToContent ? '#485863' : '#fff'}`,
                   }}
                 >
                   Genres

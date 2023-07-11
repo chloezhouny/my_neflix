@@ -9,12 +9,6 @@ export default makeStyles((theme) => ({
     '& .MuiContainer-root': {
       padding: '0 4vw',
     },
-    '& .MuiAppBar-root': {
-      backgroundColor: theme.palette.mode === 'light' ? '#FFF3EF !important' : 'black !important',
-    },
-    '& .MuiPaper-root': {
-      backgroundColor: theme.palette.mode === 'light' ? '#FFF3EF !important' : 'black !important',
-    },
   },
   menuContainer: {
     display: 'flex',
