@@ -22,10 +22,7 @@ module.exports = {
         unnamedComponents: 'arrow-function',
       },
     ],
-    'max-len': [
-      2,
-      250,
-    ],
+    'max-len': [2, 250],
     'no-multiple-empty-lines': [
       'error',
       {
@@ -36,16 +33,7 @@ module.exports = {
     'no-underscore-dangle': [
       'error',
       {
-        allow: [
-          '_d',
-          '_dh',
-          '_h',
-          '_id',
-          '_m',
-          '_n',
-          '_t',
-          '_text',
-        ],
+        allow: ['_d', '_dh', '_h', '_id', '_m', '_n', '_t', '_text'],
       },
     ],
     'object-curly-newline': 0,
@@ -59,19 +47,9 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': [
       'error',
       {
-        components: [
-          'Link',
-        ],
-        specialLink: [
-          'to',
-          'hrefLeft',
-          'hrefRight',
-        ],
-        aspects: [
-          'noHref',
-          'invalidHref',
-          'preferButton',
-        ],
+        components: ['Link'],
+        specialLink: ['to', 'hrefLeft', 'hrefRight'],
+        aspects: ['noHref', 'invalidHref', 'preferButton'],
       },
     ],
   },
