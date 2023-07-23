@@ -1,17 +1,22 @@
 # my_neflix
-A Netflix Clone using React.js, Redux Toolkit, and Material-UI.
-
+A Netflix Clone using React.js, Redux Toolkit, and Material-UI. Discover and watch exciting movies from various categories and genres, and engage with interactive features like a voice assistant for an enhanced movie-watching experience.
 [Link to Deyployment](https://my-neflix.netlify.app/)
 
+
+## The App
 <p align='center'>
 <img src="src/data/demo.gif" width=600 alt="demo" />
 </p>
 
 
 ## Features
-* Explore and preview movies from various categories and genres.
-* Enhance your movie experience with interactive features including sign-in functionality, search, voice assistant, favorites/watchlist, and customizable themes.
+* Sign up and log in via TMDB
+* Explore and preview movie trailers from various categories and genres.
 * Access detailed movie information and discover personalized recommendations.
+* Search and add movies to favorites/watchlist
+* Interact through a voice assistant
+* Customize app theme
+
 
 ## Technologies Used
 * HTML
@@ -20,4 +25,5 @@ A Netflix Clone using React.js, Redux Toolkit, and Material-UI.
 * React.js
 * Redux Toolkit
 * Alan AI
+* TMDB Api
 * Node.js
