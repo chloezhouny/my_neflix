@@ -3,7 +3,9 @@ A Netflix Clone using React.js, Redux Toolkit, and Material-UI.
 
 [Link to Deyployment](https://my-neflix.netlify.app/)
 
+<p align='center'>
 <img src="src/data/demo.gif" width=600 alt="demo" />
+</p>
 
 
 ## Features
